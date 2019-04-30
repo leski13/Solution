@@ -60,7 +60,7 @@ namespace ConsoleAppCMD
                 }
                 else
                 {
-                    Console.WriteLine($"Неверный формат ввода {name} ");
+                    Console.WriteLine($"Неверный формат ввода {name}а ");
                 }
             }
         }
