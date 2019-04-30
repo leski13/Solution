@@ -1,6 +1,8 @@
 ﻿using ClassLibrary.Model;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace ClassLibrary.Controller
@@ -13,28 +15,55 @@ namespace ClassLibrary.Controller
         /// <summary>
         /// User application
         /// </summary>
-        public User User { get; }
+        public List<User> Users { get; }
+        public User CurrentUser { get; }
+        public bool IsNewUser { get; } = false;
         /// <summary>
         /// Create new user's controller - Создание нового контроллера пользователя. 
         /// </summary>
         /// <param name="user"></param>
-        public User_Controller(string userName, string genderName, DateTime birthdate, double weight, double height)
+        public User_Controller(string userName)
         {
-            //TODO: проверка 
-            var gender = new Gender(genderName);
-            User = new User(userName, gender, birthdate, weight, height);
+            if(string.IsNullOrWhiteSpace(userName))
+            {
+                throw new ArgumentNullException("User's name cann't empty value", nameof(userName));
+            }
+            Users = GetUserData();
+            CurrentUser = Users.SingleOrDefault(u => u.Name == userName);
+            if(CurrentUser == null)
+            {
+                CurrentUser = new User(userName);
+                Users.Add(CurrentUser);
+                IsNewUser = true;
+                Save();
+            }
         }
-        public User_Controller()
+        /// <summary>
+        /// Получить сохраненный список пользователей.
+        /// </summary>
+        /// <returns></returns>
+        private List<User> GetUserData()
         {
             var formatter = new BinaryFormatter();
             using (var fs = new FileStream("users.dat", FileMode.OpenOrCreate))
             {
-                if (formatter.Deserialize(fs) is User user)
+                if (formatter.Deserialize(fs) is List<User> users)
                 {
-                    User = user;
+                    return users;
                 }
-                // TODO: Что делать если пользователя не прочитали?(What do you do if user don't read?)              
+                else
+                {
+                    return new List<User>();
+                }
             }
+        }
+        public void SetNewUserData(string genderName, DateTime birthdate, double weight = 1, double height = 1)
+        {
+            CurrentUser.Gender = new Gender(genderName);
+            CurrentUser.BirthDate = birthdate;
+            CurrentUser.Weight = weight;
+            CurrentUser.Height = height;
+            Save();
         }
         /// <summary>
         /// User's date save - Сохранить данные пользователя.
@@ -44,7 +73,7 @@ namespace ClassLibrary.Controller
             var formatter = new BinaryFormatter();
             using (var fs = new FileStream("users.dat", FileMode.OpenOrCreate))
             {
-                formatter.Serialize(fs, User);
+                formatter.Serialize(fs, Users);
             }
         }
         /// <summary>

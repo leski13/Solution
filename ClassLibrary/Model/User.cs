@@ -16,11 +16,11 @@ namespace ClassLibrary.Model
         /// <summary>
         /// gender
         /// </summary>
-        public Gender Gender { get; }
+        public Gender Gender { get; set; }
         /// <summary>
         /// birthdate
         /// </summary>
-        public DateTime BirthDate { get; }
+        public DateTime BirthDate { get; set; }
         /// <summary>
         /// вес
         /// </summary>
@@ -28,7 +28,8 @@ namespace ClassLibrary.Model
         /// <summary>
         /// рост
         /// </summary>
-        public double Height { get; set; }
+        public double Height { get; set; } 
+        public int Age { get { return DateTime.Now.Year - BirthDate.Year; } }
         #endregion
         /// <summary>
         /// Create new user
@@ -54,7 +55,7 @@ namespace ClassLibrary.Model
             {
                 throw new ArgumentNullException("Weight cann't =<0 or >200", nameof(weight));
             }
-            if(height < 0 || height > 300)
+            if(height <= 0 || height > 300)
             {
                 throw new ArgumentNullException("Height cann't =<0 or >300", nameof(height));
             }
@@ -67,9 +68,17 @@ namespace ClassLibrary.Model
             Weight = weight;
             Height = height;
         }
+        public User(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentNullException("User's name cannot empty or null", nameof(name));
+            }
+            Name = name;
+        }
         public override string ToString()
         {
-            return Name;
+            return Name + " " + Age;
         }
     }
 }
