@@ -2,7 +2,9 @@
 using ClassLibrary.Model;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,8 +14,10 @@ namespace ConsoleAppCMD
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Application FitnessTab");
-            Console.WriteLine("Add UserName");
+            var culture = CultureInfo.CreateSpecificCulture("en-en");
+            var resourceManager = new ResourceManager("ConsoleAppCMD.Languages.Messages", typeof(Program).Assembly);
+            Console.WriteLine(resourceManager.GetString("Hello", culture));
+            Console.WriteLine(resourceManager.GetString("AddUserName", culture));
             var name = Console.ReadLine();           
             var userController = new User_Controller(name);
             var eatingController = new EatingController(userController.CurrentUser);
