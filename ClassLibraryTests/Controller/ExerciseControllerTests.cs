@@ -10,22 +10,22 @@ using ClassLibrary.Model;
 namespace ClassLibrary.Controller.Tests
 {
     [TestClass()]
-    public class EatingControllerTests
+    public class ExerciseControllerTests
     {
         [TestMethod()]
         public void AddTest()
         {
             //Arrange
             var userName = Guid.NewGuid().ToString();
-            var foodName = Guid.NewGuid().ToString();
+            var activityName = Guid.NewGuid().ToString();
             var rnd = new Random();
             var userController = new User_Controller(userName);
-            var eatingCont = new EatingController(userController.CurrentUser);
-            var food = new Food(foodName, rnd.Next(10, 100), rnd.Next(10, 100), rnd.Next(10, 100), rnd.Next(100, 1000));
+            var exerciseController = new ExerciseController(userController.CurrentUser);
+            var activity = new Activity(activityName, rnd.Next(10, 100));
             //Act
-            eatingCont.Add(food, 100);
+            exerciseController.Add(activity, DateTime.Now, DateTime.Now.AddHours(1));
             //Assert
-            Assert.AreEqual(food.Name, eatingCont.Eating.Foods.First().Key.Name);
+            Assert.AreEqual(activityName, exerciseController.Activities.First().Name);
         }
     }
 }

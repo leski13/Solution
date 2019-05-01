@@ -12,12 +12,6 @@ namespace ClassLibrary.Controller.Tests
     public class User_ControllerTests
     {
         [TestMethod()]
-        public void User_ControllerTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
         public void SetNewUserDataTest()
         {
             //Arrange
