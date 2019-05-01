@@ -1,4 +1,5 @@
 ﻿using ClassLibrary.Controller;
+using ClassLibrary.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace ConsoleAppCMD
             Console.WriteLine("Add UserName");
             var name = Console.ReadLine();           
             var userController = new User_Controller(name);
+            var eatingController = new EatingController(userController.CurrentUser);
             if(userController.IsNewUser)
             {
                 Console.Write("Введите пол: ");
@@ -25,12 +27,38 @@ namespace ConsoleAppCMD
                 userController.SetNewUserData(gender, birthDate, weight, height);
             }
             Console.WriteLine(userController.CurrentUser);
+            Console.WriteLine("What do you do?");
+            Console.WriteLine("Q = new eating");
+            var key = Console.ReadKey();
+            Console.WriteLine();
+            if(key.Key == ConsoleKey.Q)
+            {
+                var foods = EnterEating();
+                eatingController.Add(foods.Food, foods.Weight);
+                foreach(var item in eatingController.Eating.Foods)
+                {
+                    Console.WriteLine($"\t {item.Key} - {item.Value}");
+                }
+            }
             Console.ReadLine();
-
-            
-            
-
         }
+
+        private static (Food Food, double Weight) EnterEating()
+        {
+            Console.Write("Add name products ");
+            var food = Console.ReadLine();
+
+            var calories = ParseDouble("calories");
+            var prots = ParseDouble("proteins");
+            var fats = ParseDouble("fats");
+            var carbohydrates = ParseDouble("carbohydrates");
+
+            var weight = ParseDouble("weight portion");
+            var product = new Food(food, prots, fats, carbohydrates, calories);
+
+            return (Food: product, Weight: weight);
+        }
+
         private static DateTime ParseDateTime()
         {
             while (true)
@@ -60,7 +88,7 @@ namespace ConsoleAppCMD
                 }
                 else
                 {
-                    Console.WriteLine($"Неверный формат ввода {name}а ");
+                    Console.WriteLine($"Неверный формат поля {name} ");
                 }
             }
         }
