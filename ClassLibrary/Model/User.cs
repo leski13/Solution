@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace ClassLibrary.Model
 {
@@ -9,10 +11,11 @@ namespace ClassLibrary.Model
     public class User
     {
         #region Property (свойства)
+        public int Id { get; set; }
         /// <summary>
         /// name
         /// </summary>
-        public string Name { get; }
+        public string Name { get; set; }
         /// <summary>
         /// gender
         /// </summary>
@@ -29,6 +32,8 @@ namespace ClassLibrary.Model
         /// рост
         /// </summary>
         public double Height { get; set; } 
+
+        public virtual ICollection<Eating> Eatings { get; set; }
         public int Age { get { return DateTime.Now.Year - BirthDate.Year; } }
         #endregion
         /// <summary>
@@ -76,6 +81,7 @@ namespace ClassLibrary.Model
             }
             Name = name;
         }
+        public User() { }
         public override string ToString()
         {
             return Name + " " + Age;

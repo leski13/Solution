@@ -1,33 +1,17 @@
-﻿using System;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+﻿using System.Collections.Generic;
 
 namespace ClassLibrary.Controller
 {
     public abstract class ControllerBase
     {
-        protected void Save(string filename, object item)
+        private readonly IDataSaver saver = new DatabaseDataSaver();
+        protected void Save<T>(List<T> item) where T: class
         {
-            var formatter = new BinaryFormatter();
-            using (var fs = new FileStream(filename, FileMode.OpenOrCreate))
-            {
-                formatter.Serialize(fs, item);
-            }
+            saver.Save(item);
         }
-        protected T Load<T>(string filename)
+        protected List<T> Load<T>() where T: class
         {
-            var formatter = new BinaryFormatter();
-            using (var fs = new FileStream(filename, FileMode.OpenOrCreate))
-            {
-                if(fs.Length>0 && formatter.Deserialize(fs) is T items)
-                {
-                    return items;
-                }
-                else
-                {
-                    return default(T);
-                }
-            }
+            return saver.Load<T>();
         }
     }
 }

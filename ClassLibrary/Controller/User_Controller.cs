@@ -12,7 +12,6 @@ namespace ClassLibrary.Controller
     /// </summary>
     public class User_Controller : ControllerBase
     {
-        private const string USER_FILE = "users.dat";
         /// <summary>
         /// User application
         /// </summary>
@@ -36,7 +35,6 @@ namespace ClassLibrary.Controller
                 CurrentUser = new User(userName);
                 Users.Add(CurrentUser);
                 IsNewUser = true;
-                Save();
             }
         }
         /// <summary>
@@ -45,7 +43,7 @@ namespace ClassLibrary.Controller
         /// <returns></returns>
         private List<User> GetUserData()
         {
-            return Load<List<User>>(USER_FILE) ?? new List<User>();
+            return Load<User>() ?? new List<User>();
         }
         public void SetNewUserData(string genderName, DateTime birthdate, double weight = 1, double height = 1)
         {
@@ -60,7 +58,7 @@ namespace ClassLibrary.Controller
         /// </summary>
         public void Save()
         {
-            Save(USER_FILE, Users);
+            Save(Users);
         }
     }
 }
